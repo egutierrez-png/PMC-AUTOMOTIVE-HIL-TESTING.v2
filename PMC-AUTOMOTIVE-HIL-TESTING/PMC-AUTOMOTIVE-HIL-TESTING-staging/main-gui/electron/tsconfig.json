@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "CommonJS",
+
+    // 📌 Código compilado para Electron debe quedar en esta carpeta:
+    "outDir": "../electron-build",
+
+    // 📌 Solo se compila la carpeta electron/, nada de src/
+    "rootDir": "./",
+
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+
+    // Para acceso a electron, node y preload
+    "types": ["node", "electron"]
+  },
+
+  // 📌 Solo compilar el código del proceso de Electron
+  "include": [
+    "./main.ts",
+    "./preload.ts",
+    "./ipc/**/*",
+    "./db/**/*",
+    "./utils/**/*",
+    "./types/**/*"
+  ],
+
+  // 📌 Nunca compilar React aquí
+  "exclude": [
+    "../src",
+    "../node_modules",
+    "../build",
+    "../dist",
+    "../dist-electron",
+    "../electron-build"
+  ]
+}

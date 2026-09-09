@@ -1,0 +1,15 @@
+{
+  "name": "pmc-bridge",
+  "version": "1.0.0",
+  "description": "Bridge: Ignition Edge <-> Node.js <-> MQTT <-> PMC",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mqtt": "^4.3.7",
+    "node-opcua": "^2.106.0",
+    "body-parser": "^1.20.2"
+  }
+}

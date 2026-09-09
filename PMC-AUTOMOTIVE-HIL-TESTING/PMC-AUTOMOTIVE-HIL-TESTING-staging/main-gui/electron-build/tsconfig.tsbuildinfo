@@ -1,0 +1,1 @@
+{"root":["../electron/main.ts","../electron/preload.ts","../electron/ipc/resultsipc.ts","../electron/db/testresultsdb.ts","../electron/utils/cleanuplogs.ts","../electron/types/testresult.d.ts"],"version":"5.9.3"}

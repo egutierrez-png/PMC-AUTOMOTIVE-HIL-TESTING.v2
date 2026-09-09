@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @import "@fontsource/roboto-mono";
+
+body {
+  @apply bg-surface text-gray-100 font-['Roboto_Mono'];
+} */
+
+.fade-logout {
+  transition: background-color 0.15s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
