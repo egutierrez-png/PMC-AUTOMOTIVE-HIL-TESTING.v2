@@ -39,9 +39,9 @@ function StepForm({ step, onChange }: Props) {
 
   const actionFields = useMemo(() => {
     switch (step.action) {
-      case "command_position":
+            case "command_position":
         return (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Field label="Position (%)">
               <SmartNumberInput
                 className={inputBase}
@@ -49,6 +49,28 @@ function StepForm({ step, onChange }: Props) {
                 max={100}
                 value={p.position ?? ""}
                 onChange={(v) => setParam("position", v)}
+              />
+            </Field>
+
+            <Field label="Final pos > (%) [expect]">
+              <input
+                className={inputBase}
+                type="number"
+                value={e.final_position_greater_than ?? ""}
+                onChange={(ev) =>
+                  setExpect("final_position_greater_than", number(ev.target.value))
+                }
+              />
+            </Field>
+
+            <Field label="Final pos < (%) [expect]">
+              <input
+                className={inputBase}
+                type="number"
+                value={e.final_position_less_than ?? ""}
+                onChange={(ev) =>
+                  setExpect("final_position_less_than", number(ev.target.value))
+                }
               />
             </Field>
 

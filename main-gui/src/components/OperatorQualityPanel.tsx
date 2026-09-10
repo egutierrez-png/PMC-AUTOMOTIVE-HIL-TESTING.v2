@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Panel } from "./Panel";
+import ValueReadingsPanel, {
+type ValueReadingItem,
+} from "./results/ValueReadingsPanel";
 import { useRuntimeStore } from "../state/useRuntimeStore";
 import type { TestResultPayload } from "../types/TestResult";
 import type { RecipeDoc } from "../types/Recipe";
@@ -40,9 +43,9 @@ function pickLimitFromRecipeLimits(
   return null;
 }
 
-function resolveResultStep(result: any, fallbackIndex: number) {
-  const raw = Number(result?.step);
-  return Number.isFinite(raw) && raw > 0 ? raw : fallbackIndex + 1;
+function resolveResultStep(_result: any, fallbackIndex: number) {
+  // Ver ResultsPanel.tsx: el campo "step" del PMC no es confiable en Auto.
+  return fallbackIndex + 1;
 }
 
 function getStepLimits(recipe: RecipeDoc | null, stepIndex: number): {
@@ -148,7 +151,17 @@ export default function OperatorQualityPanel() {
     });
   }, [listToRender, operationMode, selectedRecipe]);
 
-  return (
+const valueReadings: ValueReadingItem[] = useMemo(() => {
+  return listToRender
+    .filter((r: any) => r?.value_text !== undefined && r?.value_text !== null)
+    .map((r: any) => ({
+      label: r.value_name ?? r.message ?? "Lectura",
+      valueText: String(r.value_text),
+      ok: r.status === "PASS" ? true : r.status === "FAIL" ? false : null,
+    }));
+}, [listToRender]);
+
+ return (
     <Panel title="Control de calidad actual">
       <ChecksumSummaryPanel
         checksumValue={checksumValue}
@@ -158,6 +171,8 @@ export default function OperatorQualityPanel() {
       />
 
       <MechanicalResultsPanel items={mechanicalItems} />
+
+      <ValueReadingsPanel items={valueReadings} />
     </Panel>
   );
 }
