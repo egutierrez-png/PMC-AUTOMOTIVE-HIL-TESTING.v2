@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Panel } from "./Panel";
-import ValueReadingsPanel, {
-type ValueReadingItem,
-} from "./results/ValueReadingsPanel";
 import { useRuntimeStore } from "../state/useRuntimeStore";
 import type { TestResultPayload } from "../types/TestResult";
 import type { RecipeDoc } from "../types/Recipe";
@@ -134,12 +131,20 @@ export default function OperatorQualityPanel() {
 
       const { lowerLimit, upperLimit } = getStepLimits(selectedRecipe, stepIndex);
 
+      const hasPosition = measuredPosition !== null && measuredPosition !== -1;
+      const rawStatus =
+          typeof result?.status === "string" ? result.status.toUpperCase() : null;
+
       let inRange: boolean | null = null;
-      if (measuredPosition !== null) {
-        const lowerOk = lowerLimit === null ? true : measuredPosition >= lowerLimit;
-        const upperOk = upperLimit === null ? true : measuredPosition <= upperLimit;
-        inRange = lowerOk && upperOk;
-      }
+          if (hasPosition) {
+      const lowerOk = lowerLimit === null ? true : measuredPosition >= lowerLimit;
+      const upperOk = upperLimit === null ? true : measuredPosition <= upperLimit;
+      inRange = lowerOk && upperOk;
+    } else if (rawStatus === "PASS") {
+      inRange = true;
+    } else if (rawStatus === "FAIL") {
+      inRange = false;
+} 
 
       return {
         stepLabel: `Paso ${stepIndex + 1}`,
@@ -147,19 +152,11 @@ export default function OperatorQualityPanel() {
         lowerLimit,
         upperLimit,
         inRange,
+        valueName: result?.value_name,
+        valueText: result?.value_text,
       };
     });
   }, [listToRender, operationMode, selectedRecipe]);
-
-const valueReadings: ValueReadingItem[] = useMemo(() => {
-  return listToRender
-    .filter((r: any) => r?.value_text !== undefined && r?.value_text !== null)
-    .map((r: any) => ({
-      label: r.value_name ?? r.message ?? "Lectura",
-      valueText: String(r.value_text),
-      ok: r.status === "PASS" ? true : r.status === "FAIL" ? false : null,
-    }));
-}, [listToRender]);
 
  return (
     <Panel title="Control de calidad actual">
@@ -172,7 +169,7 @@ const valueReadings: ValueReadingItem[] = useMemo(() => {
 
       <MechanicalResultsPanel items={mechanicalItems} />
 
-      <ValueReadingsPanel items={valueReadings} />
+      
     </Panel>
   );
 }

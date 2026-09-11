@@ -3,13 +3,16 @@ import { Panel } from "./Panel";
 import { useRuntimeStore } from "../state/useRuntimeStore";
 import type { TestResultRow, TestResultPayload } from "../types/TestResult";
 
-function resolveResultStep(_result: any, fallbackIndex: number) {
-  // El campo "step" que reporta el PMC no es confiable: en Modo Automático
-  // puede repetir el mismo número (p. ej. "1") en varios resultados seguidos.
-  // Los resultados siempre llegan en el mismo orden en que se ejecutaron los
-  // pasos de la receta, así que la posición dentro del arreglo es la única
-  // fuente de verdad correcta para numerar los pasos en pantalla.
-  return fallbackIndex + 1;
+function resolveResultStep(result: any, fallbackIndex: number, mode: string) {
+  if (mode === "auto") {
+    // En Automático, el PMC puede repetir el mismo "step" en varios
+    // resultados seguidos — no es confiable, usamos la posición en el arreglo.
+    return fallbackIndex + 1;
+  }
+  // En Manual, cada resultado llega individual, pero el "step" que reporta
+  // el PMC sí es confiable aquí — lo usamos directamente.
+  const raw = Number(result?.step);
+  return Number.isFinite(raw) && raw > 0 ? raw : fallbackIndex + 1;
 }
 
 function parsePayload(row: TestResultRow): TestResultPayload | null {
@@ -26,6 +29,7 @@ export default function ResultsPanel() {
     | TestResultPayload
     | null
     | undefined;
+  const operationMode = useRuntimeStore((s) => s.mode);
 
   const runtimeList = runtimeResults?.results ?? [];
 
@@ -118,8 +122,8 @@ export default function ResultsPanel() {
             </tr>
           </thead>
           <tbody>
-            {listToRender.map((r: any, idx: number) => {
-              const displayStep = resolveResultStep(r, idx);
+              {listToRender.map((r: any, idx: number) => {
+              const displayStep = resolveResultStep(r, idx, operationMode);
 
               return (
                 <tr

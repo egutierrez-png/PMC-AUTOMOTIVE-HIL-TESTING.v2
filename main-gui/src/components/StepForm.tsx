@@ -202,11 +202,55 @@ function StepForm({ step, onChange }: Props) {
           </div>
         );
 
-      case "clear_codes":
+            case "clear_codes":
         return (
           <div className="text-xs opacity-70">
             Usará el flujo definido en firmware.
           </div>
+        );
+
+      case "read_temp":
+        return (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <Field label="Rango mínimo (°C)">
+              <input
+                className={inputBase}
+                type="number"
+                value={e.min ?? ""}
+                onChange={(ev) => setExpect("min", number(ev.target.value))}
+              />
+            </Field>
+
+            <Field label="Rango máximo (°C)">
+              <input
+                className={inputBase}
+                type="number"
+                value={e.max ?? ""}
+                onChange={(ev) => setExpect("max", number(ev.target.value))}
+              />
+            </Field>
+
+            <Field label="Timeout (ms)">
+              <input
+                className={inputBase}
+                type="number"
+                value={e.timeout_ms ?? ""}
+                onChange={(ev) => setExpect("timeout_ms", number(ev.target.value))}
+              />
+            </Field>
+          </div>
+        );
+
+      case "read_status_code":
+        return (
+          <Field label="Timeout (ms)">
+            <input
+              className={inputBase}
+              type="number"
+              value={e.timeout_ms ?? ""}
+              onChange={(ev) => setExpect("timeout_ms", number(ev.target.value))}
+            />
+          </Field>
         );
 
       default:

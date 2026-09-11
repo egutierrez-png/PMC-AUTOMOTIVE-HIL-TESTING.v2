@@ -19,6 +19,8 @@ const ACTIONS: StepAction[] = [
   "read_pid",
   "motor_off",
   "clear_codes",
+  "read_temp",
+  "read_status_code",
 ];
 
 const templateFor = (action: StepAction): RecipeStep => {
@@ -59,8 +61,20 @@ const templateFor = (action: StepAction): RecipeStep => {
         parameters: { pid_major: 0, pid_minor: 0 },
         expect: { final_position_less_than: 5, timeout_ms: 2000 },
       };
-    case "clear_codes":
+       case "clear_codes":
       return { id: uid(), action };
+    case "read_temp":
+      return {
+        id: uid(),
+        action,
+        expect: { min: 10, max: 40, timeout_ms: 2000 },
+      };
+    case "read_status_code":
+      return {
+        id: uid(),
+        action,
+        expect: { timeout_ms: 2000 },
+      };
   }
 };
 

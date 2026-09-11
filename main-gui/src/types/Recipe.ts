@@ -5,7 +5,9 @@ export type StepAction =
   | 'set_flag'
   | 'read_pid'
   | 'motor_off'
-  | 'clear_codes';
+  | 'clear_codes'
+  | 'read_temp'
+  | 'read_status_code';
 
 export type RecipeStep = {
   id: string;            // uid local para la UI
@@ -18,6 +20,8 @@ export type RecipeStep = {
     final_position_less_than?: number;
     response_time_max_ms?: number;
     store_as?: string;
+    min?: number;
+    max?: number;
   };
 };
 
